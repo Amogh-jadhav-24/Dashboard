@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<!-- Light-mode pastel palette (inserted) -->
+  <link rel="icon" type="image/png" href="logo.png">
+
+<style>
+:root.light {
+  --bg: #f7fafc;
+  --panel: #ffffff;
+  --muted: #6b7280;
+  --soft: #f8fafc;
+  --text: #0f1724;
+  --accent: #60a5fa;
+  --accent-2: #7dd3fc;
+  --primary-btn: #86efac;
+  --primary-btn-text: #062e16;
+  --danger: #fda4af;
+  --shadow: 0 6px 20px rgba(2, 6, 23, .06);
+}
+
+/* Panels & cards in light mode */
+:root.light .card,
+:root.light .panel,
+:root.light .sidebar,
+:root.light .topbar {
+  background: var(--panel) !important;
+  color: var(--text) !important;
+  border: 1px solid rgba(15,23,36,0.06);
+  box-shadow: var(--shadow);
+}
+
+/* Inputs */
+:root.light input, :root.light textarea, :root.light select {
+  background: #fff;
+  color: var(--text);
+  border: 1px solid rgba(15,23,36,0.08);
+  box-shadow: none;
+}
+
+/* Buttons */
+:root.light .btn-primary, :root.light .btn-cta {
+  background: linear-gradient(90deg,var(--primary-btn), var(--accent-2)) !important;
+  color: var(--primary-btn-text) !important;
+  border: none;
+}
+:root.light .btn-ghost {
+  background: transparent;
+  border: 1px solid rgba(15,23,36,0.06);
+  color: var(--text);
+}
+
+/* Small controls and icons */
+:root.light .muted { color: var(--muted) !important; }
+:root.light .clear-label, :root.light .icon-clear, :root.light .btn-reset, :root.light .close-x {
+  color: var(--text) !important;
+  opacity: 0.95;
+}
+:root.light svg { fill: currentColor; color: var(--text); opacity: 0.95; }
+
+/* Focus rings */
+:root.light input:focus, :root.light button:focus, :root.light a:focus {
+  box-shadow: 0 0 0 4px rgba(96,165,250,0.08);
+  outline: none;
+}
+
+/* Light mode invoice preview fix */
+:root.light #invoicePreview,
+:root.light .invoice-container {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+:root.light #invoicePreview input,
+:root.light #invoicePreview textarea,
+:root.light #invoicePreview table,
+:root.light #invoicePreview th,
+:root.light #invoicePreview td {
+  background: #000 !important;
+  color: #fff !important;
+  border: 1px solid #fff !important;
+}
+
+</style>
+<!-- End Light-mode CSS -->
+<!-- Additional Light-mode Contrast Fixes -->
+<style>
+:root.light .btn.warn { background: #FDE68A !important; color: #2b2b2b !important; border: 1px solid rgba(0,0,0,0.06); }
+:root.light .btn.danger { background: #FECACA !important; color: #3b0b0b !important; border: 1px solid rgba(0,0,0,0.06); }
+
+:root.light .btn { background: #ffffff; color: var(--text); border: 1px solid rgba(15,23,36,0.06); box-shadow: none; }
+:root.light .btn.primary { color: var(--primary-btn-text); }
+
+:root.light .remove, :root.light .btn.remove, :root.light button.remove {
+  background: #FEE2E2 !important;
+  color: #7f1d1d !important;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.06);
+  padding: 8px 10px;
+}
+
+:root.light .history-item .btn { background: #fff; color: var(--text); border: 1px solid rgba(0,0,0,0.06); }
+:root.light .history-item .btn.danger { background: #FECACA; color: #3b0b0b; }
+
+:root.light .menu button { background: transparent; color: var(--text); }
+:root.light .menu button.active { background: rgba(0,0,0,0.04); }
+
+:root.light .clear-label, :root.light .icon-clear, :root.light .btn-reset, :root.light .close-x {
+  background: rgba(15,23,36,0.04);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 6px 10px;
+}
+
+:root.light input::placeholder { color: rgba(15,23,36,0.48); }
+
+/* Make small icons / svg inherit and visible */
+:root.light svg { stroke: currentColor !important; color: var(--text) !important; fill: none !important; }
+
+/* Ensure Reset/Clear text not pale */
+:root.light .btn.warn, :root.light .btn.danger { font-weight:700; }
+
+/* Make totals chips stand out */
+:root.light .totals .chip { background: #fff; border: 1px solid rgba(0,0,0,0.06); box-shadow:none; }
+</style>
+
+
+<style>
+/* Light mode invoice preview dark styling */
+body.light #invoicePreview,
+.light #invoicePreview,
+:root.light #invoicePreview,
+body.light .invoice-container,
+.light .invoice-container,
+:root.light .invoice-container {
+  background: #000 !important;
+  color: #fff !important;
+}
+body.light #invoicePreview input,
+.light #invoicePreview input,
+:root.light #invoicePreview input,
+body.light #invoicePreview textarea,
+.light #invoicePreview textarea,
+:root.light #invoicePreview textarea {
+  background: #000 !important;
+  color: #fff !important;
+  border: 1px solid #333 !important;
+}
+/* ensure text inside preview uses white color */
+body.light #invoicePreview *, body.light .invoice-container *,
+.light #invoicePreview *, .light .invoice-container *,
+:root.light #invoicePreview *, :root.light .invoice-container * {
+  color: #fff !important;
+}
+</style>
+<!-- End additional light fixes -->
+
+
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FarmsStat — Owner Dashboard</title>
+  <style>
+    /* Keep your original polished dark/light styles (trimmed for brevity) */
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --muted: #1f2937;
+      --soft: #0b1222;
+      --text: #e5e7eb;
+      --accent: #22c55e;
+      --accent-2: #14b8a6;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --shadow: 0 10px 30px rgba(0, 0, 0, .35);
+      --radius: 18px;
+    }
+
+    :root.light {
+      --bg: #f3f5f7;
+      --panel: #ffffff;
+      --muted: #64748b;
+      --soft: #f8fafc;
+      --text: #0f172a;
+      --accent: #16a34a;
+      --accent-2: #06b6d4;
+      --danger: #dc2626;
+      --warning: #f59e0b;
+      --shadow: 0 6px 20px rgba(2, 6, 23, .06);
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      height: 100%
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(120deg, var(--bg), #0b1220 60%, #0c1226);
+      color: var(--text);
+    }
+
+    :root.light body {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    a {
+      color: inherit
+    }
+
+    .app {
+      display: flex;
+      min-height: 100vh
+    }
+
+    .sidebar {
+      width: 280px;
+      background: linear-gradient(180deg, var(--panel), #0d1529);
+      border-right: 1px solid rgba(255, 255, 255, .05);
+      padding: 18px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    :root.light .sidebar {
+      background: var(--panel);
+      border-right: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .badge {
+      background: rgba(34, 197, 94, .15);
+      color: #bbf7d0;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px
+    }
+
+    :root.light .badge {
+      background: rgba(22, 163, 74, 0.08);
+      color: var(--accent);
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px
+    }
+
+    .menu button {
+      all: unset;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      color: #cbd5e1;
+    }
+
+    .menu button.active {
+      background: rgba(255, 255, 255, .06);
+      color: #fff;
+      outline: 1px solid rgba(255, 255, 255, .08)
+    }
+
+    :root.light .menu button {
+      color: var(--text);
+    }
+
+    :root.light .menu button.active {
+      background: rgba(0, 0, 0, 0.04);
+      outline: none;
+    }
+
+    .topbar {
+      display: none;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(13, 21, 41, .9);
+      backdrop-filter: blur(10px);
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .06)
+    }
+
+    :root.light .topbar {
+      background: rgba(255, 255, 255, 0.95);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      color: var(--text);
+    }
+
+    .hamburger {
+      all: unset;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .06)
+    }
+
+    .drawer {
+      position: fixed;
+      inset: 0;
+      display: none;
+      background: rgba(0, 0, 0, .4);
+      z-index: 60;
+    }
+
+    .drawer .sheet {
+      width: 82%;
+      max-width: 320px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--panel), #0d1529);
+      padding: 18px;
+      box-shadow: var(--shadow)
+    }
+
+    :root.light .drawer .sheet {
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .content {
+      flex: 1;
+      padding: 26px;
+      max-width: 1400px;
+      margin: 0 auto
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px
+    }
+
+    .card {
+      grid-column: span 12;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .03), rgba(255, 255, 255, .02));
+      border: 1px solid rgba(255, 255, 255, .06);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    :root.light .card {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .card h2 {
+      margin: 0 0 10px 0;
+      font-size: 20px
+    }
+
+    .row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap
+    }
+
+    .field {
+      flex: 1;
+      min-width: 180px
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: #94a3b8;
+      margin: 0 0 6px 2px
+    }
+
+    :root.light label {
+      color: var(--muted);
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, .08);
+      background: rgba(255, 255, 255, .04);
+      color: #e5e7eb;
+      outline: none;
+    }
+
+    :root.light input,
+    :root.light select,
+    :root.light textarea {
+      background: #fff;
+      color: var(--text);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    input::placeholder {
+      color: #94a3b8
+    }
+
+    .btn {
+      all: unset;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      user-select: none;
+      border: 1px solid rgba(255, 255, 255, .08);
+      background: rgba(255, 255, 255, .06);
+    }
+
+    .btn.primary {
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      color: #04210d;
+      font-weight: 700;
+      border: none
+    }
+
+    .btn.warn {
+      background: rgba(245, 158, 11, .2);
+      color: #fde68a
+    }
+
+    .btn.danger {
+      background: rgba(239, 68, 68, .2);
+      color: #fecaca
+    }
+
+    .btn:active {
+      transform: translateY(1px)
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 10px
+    }
+
+    th,
+    td {
+      padding: 10px 12px;
+      text-align: left
+    }
+
+    thead th {
+      font-size: 12px;
+      color: #93c5fd;
+      border-bottom: 1px dashed rgba(255, 255, 255, .15)
+    }
+
+    :root.light thead th {
+      color: #0f172a;
+      border-bottom: 1px dashed rgba(0, 0, 0, 0.06);
+    }
+
+    tbody tr {
+      background: rgba(255, 255, 255, .03);
+      border: 1px solid rgba(255, 255, 255, .06)
+    }
+
+    :root.light tbody tr {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    tbody td {
+      border-top: 1px solid rgba(255, 255, 255, .06);
+      border-bottom: 1px solid rgba(255, 255, 255, .06)
+    }
+
+    tbody tr td:first-child {
+      border-left: 1px solid rgba(255, 255, 255, .06);
+      border-top-left-radius: 12px;
+      border-bottom-left-radius: 12px
+    }
+
+    tbody tr td:last-child {
+      border-right: 1px solid rgba(255, 255, 255, .06);
+      border-top-right-radius: 12px;
+      border-bottom-right-radius: 12px
+    }
+
+    .totals {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: flex-end
+    }
+
+    .totals .chip {
+      min-width: 220px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid rgba(255, 255, 255, .06)
+    }
+
+    :root.light .totals .chip {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      color: var(--text);
+    }
+
+    .right {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap
+    }
+
+    .invoice {
+      background: #fff;
+      color: #111;
+      border-radius: 12px;
+      padding: 22px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .inv-grid {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap
+    }
+
+    .inv-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px
+    }
+
+    .inv-table th,
+    .inv-table td {
+      border: 1px solid #e5e7eb;
+      padding: 8px 10px;
+      font-size: 13px
+    }
+
+    .inv-foot {
+      margin-top: 10px;
+      display: flex;
+      justify-content: flex-end
+    }
+
+    .muted {
+      color: #94a3b8
+    }
+
+    .history-list {
+      display: grid;
+      gap: 10px
+    }
+
+    .history-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, .03);
+      border: 1px solid rgba(255, 255, 255, .06);
+      border-radius: 12px;
+    }
+
+    :root.light .history-item {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      color: var(--text);
+    }
+
+    @media (max-width: 992px) {
+      .sidebar {
+        display: none
+      }
+
+      .topbar {
+        display: block
+      }
+
+      .content {
+        padding: 16px
+      }
+    }
+  </style>
+</head>
+
+<body>
+<!-- Subscription & Realtime Expiry Guard (inserted) -->
+<script type="module">
+  import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc, serverTimestamp, onSnapshot, } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCb2dIwyu3eaAYYpLBPZtL4tp1a5tcLyvw",
+    authDomain: "farmsstat.firebaseapp.com",
+    projectId: "farmsstat",
+    storageBucket: "farmsstat.appspot.com",
+    messagingSenderId: "743112044480",
+    appId: "1:743112044480:web:41a34d7af18ea3daa1e225"
+  };
+
+  // avoid duplicate app initialization
+  let app;
+  if (getApps().length) {
+    app = getApp();
+  } else {
+    app = initializeApp(firebaseConfig);
+  }
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  function parseDateAny(val){
+    if (!val) return null;
+    try {
+      if (typeof val === 'string') {
+        const d = new Date(val);
+        if (!isNaN(d)) return d;
+      }
+      if (typeof val === 'number') {
+        const d = new Date(val);
+        if (!isNaN(d)) return d;
+      }
+      if (typeof val === 'object' && typeof val.toDate === 'function') {
+        return val.toDate();
+      }
+    } catch(e){
+      console.warn('parseDateAny error', e);
+    }
+    return null;
+  }
+
+  async function ensureTrial(user) {
+    const subRef = doc(db, 'subscriptions', user.uid);
+    const snap = await getDoc(subRef);
+    if (!snap.exists()) {
+      const start = new Date();
+      const end = new Date(start);
+      end.setDate(start.getDate() + 30); // 30 day trial
+      const payload = {
+        plan: 'trial',
+        startISO: start.toISOString(),
+        expiry: end.toISOString(),
+        createdAt: serverTimestamp(),
+        createdBy: user.uid
+      };
+      await setDoc(subRef, payload, { merge: true });
+      return payload;
+    }
+    return snap.data();
+  }
+
+  let redirected = false;
+  function doRedirect(msg){
+    if (redirected) return;
+    redirected = true;
+    alert(msg || 'Redirecting to pricing page.');
+    window.location.href = '/index.html';
+  }
+
+  onAuthStateChanged(auth, async (user) => {
+    try {
+      if (!user) {
+        doRedirect('Please log in to access the dashboard.');
+        return;
+      }
+      // ensure trial exists
+      await ensureTrial(user);
+
+      const subRef = doc(db, 'subscriptions', user.uid);
+      // initial check
+      const snap = await getDoc(subRef);
+      const s = snap.exists() ? snap.data() : null;
+      const expiry = parseDateAny(s?.expiry || s?.endISO || s?.end || s?.end_ts);
+      if (!expiry) {
+        // create fallback expiry and reload
+        const start = new Date();
+        const end = new Date(start);
+        end.setDate(start.getDate() + 30);
+        await setDoc(subRef, { expiry: end.toISOString(), plan: s?.plan || 'trial' }, { merge: true });
+        window.location.reload();
+        return;
+      }
+      if (expiry < new Date()) {
+        doRedirect('Your subscription has expired. Please renew.');
+        return;
+      }
+
+      // realtime listener to kick out if expiry updated to past
+      const unsub = onSnapshot(subRef, (docSnap) => {
+        const data = docSnap.exists() ? docSnap.data() : null;
+        const e = parseDateAny(data?.expiry || data?.endISO || data?.end || data?.end_ts);
+        if (e && e < new Date()) {
+          doRedirect('Your subscription has expired. Please renew.');
+        }
+      }, (err) => {
+        console.error('Realtime sub error', err);
+      });
+
+      // periodic safety-check every 60 seconds (in case local expiry passes)
+      const intervalId = setInterval(async () => {
+        try {
+          if (redirected) { clearInterval(intervalId); if (typeof unsub === 'function') unsub(); return; }
+          const s2 = await getDoc(subRef);
+          const data = s2.exists() ? s2.data() : null;
+          const e = parseDateAny(data?.expiry || data?.endISO || data?.end || data?.end_ts);
+          if (e && e < new Date()) {
+            doRedirect('Your subscription has expired. Please renew.');
+          }
+        } catch (e) { console.error('Interval check failed', e); }
+      }, 60*1000);
+
+    } catch (err) {
+      console.error('Subscription guard error', err);
+      try { await auth.signOut(); } catch(e){}
+      doRedirect('Unable to verify subscription. Please sign in again.');
+    }
+  }, (err) => {
+    console.error('Auth listener error', err);
+    doRedirect('Authentication error. Please sign in again.');
+  });
+</script>
+<!-- End guard -->
+
+
+  <header class="topbar">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:10px">
+      <button class="hamburger" id="openDrawer" aria-label="Open Menu">☰</button>
+      <div style="display:flex; align-items:center; gap:10px">
+        <strong>FarmsStat</strong>
+        <span class="badge">Owner Dashboard</span>
+      </div>
+      <div style="display:flex; gap:8px; align-items:center">
+        <button class="btn" id="themeToggleTop" title="Toggle theme">🌓</button>
+        <button class="btn" id="logoutBtn">Logout</button>
+        <span style="opacity:.7; font-size:12px" id="userEmail">—</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="drawer" id="drawer">
+    <div class="sheet">
+      <div class="brand">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+          <path d="M3 12L12 3l9 9" stroke="#22c55e" stroke-width="2" />
+          <path d="M5 10v10h14V10" stroke="#22c55e" stroke-width="2" />
+        </svg>
+        <div>
+          <div style="font-weight:700">FarmsStat</div>
+          <div class="badge">Quick Invoices</div>
+        </div>
+      </div>
+      <div class="menu" id="mobileMenu"></div>
+      <div class="foot">© <span id="year2"></span> FarmsStat</div>
+    </div>
+  </div>
+
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+          <path d="M3 12L12 3l9 9" stroke="#22c55e" stroke-width="2" />
+          <path d="M5 10v10h14V10" stroke="#22c55e" stroke-width="2" />
+        </svg>
+        <div>
+          <div style="font-weight:800; letter-spacing:.3px">FarmsStat</div>
+          <div class="badge">Owner Console</div>
+        </div>
+      </div>
+      <div class="menu" id="sideMenu"></div>
+      <div style="margin-top:12px">
+        <button class="btn" id="themeToggle" title="Toggle theme">🌓 Toggle Theme</button>
+      </div>
+      <div class="foot">© <span id="year"></span> FarmsStat</div>
+    </aside>
+
+    <main class="content">
+      <div class="cards">
+        <section class="card" id="view-dashboard" hidden>
+          <h2>Dashboard</h2>
+          <p class="muted">Quick overview</p>
+          <div class="row" style="margin-top:10px">
+            <div class="chip"
+              style="background:rgba(34,197,94,.12); border:1px solid rgba(34,197,94,.25); border-radius:14px; padding:14px 16px; min-width:240px">
+              <div style="font-size:12px; opacity:.8">Today’s Bills</div>
+              <div style="font-size:22px; font-weight:800" id="statToday">0</div>
+            </div>
+            <div class="chip"
+              style="background:rgba(20,184,166,.12); border:1px solid rgba(20,184,166,.25); border-radius:14px; padding:14px 16px; min-width:240px">
+              <div style="font-size:12px; opacity:.8">Total Revenue (Month)</div>
+              <div style="font-size:22px; font-weight:800" id="statMonth">₹0</div>
+            </div>
+            <div class="chip" style="background:rgba(96,165,250,0.12); border:1px solid rgba(96,165,250,0.20); border-radius:14px; padding:14px 16px; min-width:240px; margin-left:8px;">
+              <div style="font-size:12px; opacity:.8">Total Revenue (All)</div>
+              <div style="font-size:22px; font-weight:800" id="totalRevenue">₹0.00</div>
+            </div>
+            
+          </div>
+        </section>
+
+        <section class="card" id="view-create">
+          <h2>Create Bill</h2>
+          <div class="row">
+            <div class="field"><label>Invoice #</label><input id="invoiceNo" placeholder="Auto" readonly></div>
+            <div class="field"><label>Date</label><input id="invoiceDate" type="date"></div>
+            <div class="field"><label>Customer Name</label><input id="custName" placeholder="e.g. Rahul Sharma"
+                autocomplete="name"></div>
+            <div class="field"><label>Phone (WhatsApp)</label><input id="custPhone" placeholder="e.g. 9876543210"
+                inputmode="numeric" autocomplete="tel"></div>
+          </div>
+
+          <div style="height:10px"></div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:10px">
+            <h3 style="margin:6px 0">Items / Services</h3>
+            <div class="right">
+              <button class="btn" id="addItem">＋ Add Item</button>
+              <button class="btn warn" id="clearItems" title="Remove all rows">Clear</button>
+            </div>
+          </div>
+
+          <div style="overflow:auto">
+            <table>
+              <thead>
+                <tr>
+                  <th style="min-width:220px">Item</th>
+                  <th>Qty</th>
+                  <th>Rate (₹)</th>
+                  <th>Tax %</th>
+                  <th>Amount (₹)</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="itemsBody"></tbody>
+            </table>
+          </div>
+
+          <div class="totals" style="margin-top:8px">
+            <div class="chip">
+              <div style="font-size:12px; opacity:.8">Subtotal</div>
+              <div id="subtotal" style="font-weight:800; font-size:18px">₹0.00</div>
+            </div>
+            <div class="chip">
+              <label>Discount (₹)</label>
+              <input id="discount" type="number" step="0.01" value="0" />
+            </div>
+            <div class="chip">
+              <div style="font-size:12px; opacity:.8">Tax Total</div>
+              <div id="taxtotal" style="font-weight:800; font-size:18px">₹0.00</div>
+            </div>
+            <div class="chip" style="background:rgba(34,197,94,.15); border-color:rgba(34,197,94,.3)">
+              <div style="font-size:12px; opacity:.8">Grand Total</div>
+              <div id="grand" style="font-weight:900; font-size:20px">₹0.00</div>
+            </div>
+          </div>
+
+          <div class="right" style="margin-top:14px">
+            <button class="btn" id="previewBtn">Preview</button>
+            <button class="btn primary" id="saveBtn">Generate PDF</button>
+            <button class="btn" id="shareBtn" title="Share PDF via WhatsApp">Share to WhatsApp</button>
+            <button class="btn danger" id="resetForm">Reset</button>
+          </div>
+
+          <div style="height:18px"></div>
+          <h3 style="margin:6px 0">Invoice Preview</h3>
+          <div id="invoicePreview" class="invoice">
+            <div class="inv-grid">
+              <div>
+                <h3 id="pBizName">Your Farmhouse</h3>
+                <small id="pBizAddr">Address line</small><br />
+                <small id="pBizGST"></small>
+              </div>
+              <div style="text-align:right">
+                <img id="pBizLogo" alt="" style="max-height:48px; display:none" />
+                <div><small><strong>Invoice:</strong> <span id="pInvNo"></span></small></div>
+                <div><small><strong>Date:</strong> <span id="pInvDate"></span></small></div>
+              </div>
+            </div>
+            <div style="margin-top:10px">
+              <small><strong>Billed To:</strong> <span id="pCustName">—</span> | <span id="pCustPhone">—</span></small>
+            </div>
+            <table class="inv-table" id="pTable">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Qty</th>
+                  <th>Rate</th>
+                  <th>Tax %</th>
+                  <th>Amount</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+            <div class="inv-foot">
+              <table style="border-collapse:collapse">
+                <tr>
+                  <td style="padding:6px 10px; border:1px solid #e5e7eb">Subtotal</td>
+                  <td style="padding:6px 10px; border:1px solid #e5e7eb" id="pSubtotal">₹0.00</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 10px; border:1px solid #e5e7eb">Discount</td>
+                  <td style="padding:6px 10px; border:1px solid #e5e7eb" id="pDiscount">₹0.00</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 10px; border:1px solid #e5e7eb">Tax Total</td>
+                  <td style="padding:6px 10px; border:1px solid #e5e7eb" id="pTax">₹0.00</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 10px; border:1px solid #e5e7eb; font-weight:700">Grand Total</td>
+                  <td style="padding:6px 10px; border:1px solid #e5e7eb; font-weight:800" id="pGrand">₹0.00</td>
+                </tr>
+              </table>
+            </div>
+            <div style="margin-top:8px"><small>Thank you for your visit!</small></div>
+          </div>
+        </section>
+
+        <section class="card" id="view-history" hidden>
+          <h2>Bill History</h2>
+          <p class="muted">Saved in your account. Visible only to you.</p>
+          <div class="history-list" id="historyList"></div>
+        </section>
+
+        <section class="card" id="view-settings" hidden>
+          <h2>Settings</h2>
+          <div class="row">
+            <div class="field"><label>Default Currency Symbol</label><input id="setCurrency" value="₹"></div>
+            <div class="field"><label>Invoice Prefix</label><input id="setPrefix" value="INV-"></div>
+            <div class="field"><label>Next Sequence #</label><input id="setSeq" type="number" value="1001"></div>
+          </div>
+          <div style="height:10px"></div>
+          <div class="row">
+            <div class="field"><label>Business Name</label><input id="bizNameSet" placeholder="Wild Farmhouse"></div>
+            <div class="field"><label>Address</label><input id="bizAddrSet" placeholder="K. M. Munshi Marg, Mumbai">
+            </div>
+            <div class="field"><label>GSTIN (optional)</label><input id="bizGSTSet" placeholder="27ABCDE1234F1Z5"></div>
+            <div class="field"><label>Logo URL (optional)</label><input id="bizLogoSet" placeholder="https://..."></div>
+          </div>
+          <div class="right" style="margin-top:12px"><button class="btn primary" id="saveSettings">Save
+              Settings</button></div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+  <!-- Firebase + App Script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+    import { getFirestore, enableIndexedDbPersistence, doc, getDoc, setDoc, updateDoc, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+
+    // 1) Put your config here
+    const firebaseConfig = {
+      apiKey: "AIzaSyCb2dIwyu3eaAYYpLBPZtL4tp1a5tcLyvw",
+      authDomain: "farmsstat.firebaseapp.com",
+      projectId: "farmsstat",
+      storageBucket: "farmsstat.appspot.com",
+      messagingSenderId: "743112044480",
+      appId: "1:743112044480:web:41a34d7af18ea3daa1e225"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    import { setPersistence, browserLocalPersistence }
+      from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+
+    setPersistence(auth, browserLocalPersistence);
+    const db = getFirestore(app);
+    enableIndexedDbPersistence(db).catch(() => {/* ignore if already enabled or not supported */ });
+
+    const $ = (q, root = document) => root.querySelector(q);
+    const $$ = (q, root = document) => Array.from(root.querySelectorAll(q));
+
+    // Auth gate
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        // delay a bit before kicking out, so Firebase can restore session
+        setTimeout(() => {
+          if (!auth.currentUser) {
+            window.location.href = "./index.html";
+          }
+        }, 1000);
+      } else {
+        console.log("User logged in:", user.email);
+        // initialize dashboard for this user
+        initForUser(user);
+      }
+    });
+
+
+    // UI wiring
+    $('#year').textContent = new Date().getFullYear();
+    $('#year2').textContent = new Date().getFullYear();
+    $('#openDrawer').onclick = () => { const d = $('#drawer'); d.style.display = 'grid'; d.style.gridTemplateColumns = '1fr'; };
+    $('#drawer').addEventListener('click', (e) => { if (e.target.id === 'drawer') { e.currentTarget.style.display = 'none'; } });
+    function switchView(id) {
+      ['dashboard', 'create', 'history', 'settings'].forEach(v => $(`#view-${v}`).hidden = v !== id);
+      $$('.menu button').forEach(b => b.classList.toggle('active', b.dataset.view === id));
+      if (id === 'history') renderHistory();
+      if (id === 'dashboard') calcDashboard();
+    }
+    const routes = [
+      { id: 'dashboard', label: 'Dashboard', icon: '📊' },
+      { id: 'create', label: 'Create Bill', icon: '🧾' },
+      { id: 'history', label: 'History', icon: '📚' },
+      { id: 'settings', label: 'Settings', icon: '⚙️' }
+    ];
+    function renderMenus() {
+      ['sideMenu', 'mobileMenu'].forEach(hostId => {
+        const host = document.getElementById(hostId);
+        host.innerHTML = '';
+        routes.forEach(r => {
+          const btn = document.createElement('button');
+          btn.innerHTML = `<span>${r.icon}</span><span>${r.label}</span>`;
+          btn.dataset.view = r.id;
+          if (r.id === 'create') btn.classList.add('active');
+          btn.onclick = () => { switchView(r.id); $('#drawer').style.display = 'none'; };
+          host.appendChild(btn);
+        });
+      });
+    }
+    renderMenus();
+    switchView('create');
+
+    // Theme
+    function applyTheme() {
+      const t = localStorage.getItem('fb_theme') || 'dark';
+      document.documentElement.classList.toggle('light', t === 'light');
+    }
+    function toggleTheme() {
+      const t = localStorage.getItem('fb_theme') || 'dark';
+      const nt = t === 'light' ? 'dark' : 'light';
+      localStorage.setItem('fb_theme', nt);
+      applyTheme();
+    }
+    applyTheme();
+    $('#themeToggle').onclick = toggleTheme;
+    $('#themeToggleTop').onclick = toggleTheme;
+
+    // Logout
+    document.getElementById('logoutBtn').onclick = () => signOut(auth);
+
+    // ========== Firestore data model per user ==========
+    let userRef, billsCol, settingsRef, cachedSettings = null, billsCache = [];
+
+    async function initForUser(user) {
+      userRef = doc(db, 'users', user.uid);
+      settingsRef = doc(db, 'users', user.uid, 'settings', 'default');
+      billsCol = collection(db, 'users', user.uid, 'bills');
+
+      // Ensure settings doc exists
+      const snap = await getDoc(settingsRef);
+      if (!snap.exists()) {
+        await setDoc(settingsRef, {
+          currency: '₹', prefix: 'INV-', seq: 1001,
+          bizName: '', bizAddr: '', bizGST: '', bizLogo: ''
+        });
+      }
+      cachedSettings = (await getDoc(settingsRef)).data();
+      // Populate settings UI
+      $('#setCurrency').value = cachedSettings.currency || '₹';
+      $('#setPrefix').value = cachedSettings.prefix || 'INV-';
+      $('#setSeq').value = cachedSettings.seq || 1001;
+      $('#bizNameSet').value = cachedSettings.bizName || '';
+      $('#bizAddrSet').value = cachedSettings.bizAddr || '';
+      $('#bizGSTSet').value = cachedSettings.bizGST || '';
+      $('#bizLogoSet').value = cachedSettings.bizLogo || '';
+
+      // Init invoice form defaults
+      const todayISO = new Date().toISOString().slice(0, 10);
+      $('#invoiceDate').value = todayISO;
+      $('#invoiceNo').value = await nextInvoiceNo(); // consumes + updates seq
+      addRow(); // start one row
+      recalc(); // compute totals
+
+      // Live history listener
+      const q = query(billsCol, orderBy('ts', 'desc'));
+      onSnapshot(q, (snap) => {
+        billsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderHistory();
+        calcDashboard();
+      });
+    }
+
+    // Update settings
+    $('#saveSettings').onclick = async () => {
+      const data = {
+        currency: $('#setCurrency').value || '₹',
+        prefix: $('#setPrefix').value || 'INV-',
+        seq: parseInt($('#setSeq').value || '1001', 10),
+        bizName: $('#bizNameSet').value || '',
+        bizAddr: $('#bizAddrSet').value || '',
+        bizGST: $('#bizGSTSet').value || '',
+        bizLogo: $('#bizLogoSet').value || ''
+      };
+      await setDoc(settingsRef, data, { merge: true });
+      cachedSettings = data;
+      alert('Settings saved.');
+      recalc();
+    };
+
+    // Helpers
+    const fmt = (n) => `${(cachedSettings?.currency || '₹')}${(n || 0).toFixed(2)}`;
+
+    async function nextInvoiceNo() {
+      // Get current seq then +1
+      const s = (await getDoc(settingsRef)).data();
+      const next = `${(s.prefix || 'INV-')}${s.seq || 1001}`;
+      await updateDoc(settingsRef, { seq: (s.seq || 1001) + 1 });
+      cachedSettings = { ...s, seq: (s.seq || 1001) + 1 };
+      return next;
+    }
+
+    // Items logic
+    const tbody = $('#itemsBody');
+    function addRow(pref = { name: '', qty: 1, rate: 0, tax: 0 }) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+    <td><input placeholder="Room, Food, Pool..." value="${pref.name}"></td>
+    <td><input type="number" min="0" step="1" value="${pref.qty}"></td>
+    <td><input type="number" min="0" step="0.01" value="${pref.rate}"></td>
+    <td><input type="number" min="0" step="0.01" value="${pref.tax}"></td>
+    <td class="amount">₹0.00</td>
+    <td><button class="btn danger remove">✕</button></td>
+  `;
+      tbody.appendChild(tr);
+      $$('.remove', tr).forEach(btn => btn.onclick = () => { tr.remove(); recalc(); });
+      $$('input', tr).forEach(i => i.addEventListener('input', recalc));
+      recalc();
+    }
+    document.getElementById('addItem').onclick = () => addRow();
+    document.getElementById('clearItems').onclick = () => { tbody.innerHTML = ''; recalc(); };
+    document.getElementById('discount').addEventListener('input', recalc);
+    ['custName', 'custPhone'].forEach(id => { document.getElementById(id).addEventListener('input', () => recalc()); });
+
+    function getItems() {
+      return Array.from(tbody.children).map(tr => {
+        const [name, qty, rate, tax] = $$('input', tr).map(i => i.value);
+        const q = parseFloat(qty) || 0, r = parseFloat(rate) || 0, t = parseFloat(tax) || 0;
+        const base = q * r;
+        const taxAmt = base * (t / 100);
+        const total = base + taxAmt;
+        return { name: name.trim(), qty: q, rate: r, tax: t, amount: total, taxAmt };
+      }).filter(it => it.name || it.qty || it.rate || it.tax);
+    }
+
+    function recalc() {
+      const items = getItems();
+      let subtotal = 0, taxTotal = 0;
+      items.forEach(it => { subtotal += (it.qty * it.rate); taxTotal += it.taxAmt; });
+      const discount = Math.max(0, parseFloat($('#discount').value) || 0);
+      const grand = Math.max(0, subtotal - discount + taxTotal);
+
+      items.forEach((it, idx) => { const row = tbody.children[idx]; if (row) $('.amount', row).textContent = fmt(it.amount); });
+      $('#subtotal').textContent = fmt(subtotal);
+      $('#taxtotal').textContent = fmt(taxTotal);
+      $('#grand').textContent = fmt(grand);
+
+      syncPreview(items, { subtotal, taxTotal, discount, grand });
+    }
+
+    function syncPreview(items, totals) {
+      const bname = cachedSettings?.bizName || 'Your Farmhouse';
+      const baddr = cachedSettings?.bizAddr || 'Address';
+      const bgst = cachedSettings?.bizGST || '';
+      const blogo = cachedSettings?.bizLogo || '';
+
+      $('#pBizName').textContent = bname;
+      $('#pBizAddr').textContent = baddr;
+      $('#pBizGST').textContent = bgst ? `GSTIN: ${bgst}` : '';
+      const img = $('#pBizLogo');
+      if (blogo) { img.src = blogo; img.style.display = 'block'; } else { img.style.display = 'none'; }
+
+      $('#pInvNo').textContent = $('#invoiceNo').value;
+      $('#pInvDate').textContent = $('#invoiceDate').value;
+      $('#pCustName').textContent = $('#custName').value || '—';
+      $('#pCustPhone').textContent = $('#custPhone').value || '—';
+
+      const body = $('#pTable tbody');
+      body.innerHTML = '';
+      items.forEach(it => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${escapeHtml(it.name)}</td><td>${it.qty}</td><td>${fmt(it.rate)}</td><td>${(it.tax || 0).toFixed(2)}</td><td>${fmt(it.amount)}</td>`;
+        body.appendChild(tr);
+      });
+      $('#pSubtotal').textContent = fmt(totals.subtotal || 0);
+      $('#pDiscount').textContent = fmt(totals.discount || 0);
+      $('#pTax').textContent = fmt(totals.taxTotal || 0);
+      $('#pGrand').textContent = fmt(totals.grand || 0);
+    }
+
+    function escapeHtml(s) { return (s || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m])); }
+
+    document.getElementById('previewBtn').onclick = () => { recalc(); document.getElementById('invoicePreview').scrollIntoView({ behavior: 'smooth' }); };
+
+    async function generatePDF() {
+      recalc();
+      const node = document.getElementById('invoicePreview');
+      const { jsPDF } = window.jspdf;
+      const canvas = await html2canvas(node, { scale: 2, background: '#fff' });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'pt', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = pageWidth - 40;
+      const imgHeight = canvas.height * imgWidth / canvas.width;
+      let y = 20;
+      if (imgHeight < pageHeight - 40) {
+        pdf.addImage(imgData, 'PNG', 20, y, imgWidth, imgHeight);
+      } else {
+        let heightLeft = imgHeight;
+        let position = 20;
+        pdf.addImage(imgData, 'PNG', 20, position, imgWidth, imgHeight);
+        heightLeft -= (pageHeight - 40);
+        while (heightLeft > 0) {
+          pdf.addPage();
+          position = 20 - heightLeft;
+          pdf.addImage(imgData, 'PNG', 20, position, imgWidth, imgHeight);
+          heightLeft -= (pageHeight - 40);
+        }
+      }
+      const fname = `${(document.getElementById('invoiceNo').value || 'invoice')}.pdf`;
+      return { pdf, fname };
+    }
+
+    // Save (download) & record history to Firestore
+    document.getElementById('saveBtn').onclick = async () => {
+      const { pdf, fname } = await generatePDF();
+      pdf.save(fname);
+      await saveToHistory(fname);
+    };
+
+    document.getElementById('shareBtn').onclick = async () => {
+      try {
+        const { pdf, fname } = await generatePDF();
+        const blob = pdf.output('blob');
+        const file = new File([blob], fname, { type: 'application/pdf' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], title: 'Invoice', text: `Invoice ${document.getElementById('invoiceNo').value} - ${document.getElementById('pGrand').textContent}` });
+          await saveToHistory(fname);
+        } else {
+          pdf.save(fname);
+          const phone = (document.getElementById('custPhone').value || '').replace(/\D/g, '');
+          const msg = encodeURIComponent(`Invoice ${document.getElementById('invoiceNo').value}\nAmount: ${document.getElementById('pGrand').textContent}`);
+          const wa = `https://wa.me/${phone ? '91' + phone : ''}?text=${msg}`;
+          window.open(wa, '_blank');
+          await saveToHistory(fname);
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Share failed. Downloading the PDF instead.');
+        const { pdf, fname } = await generatePDF();
+        pdf.save(fname);
+        await saveToHistory(fname);
+      }
+    };
+
+    document.getElementById('resetForm').onclick = async () => {
+      if (!confirm('Clear current bill?')) return;
+      document.getElementById('custName').value = '';
+      document.getElementById('custPhone').value = '';
+      document.getElementById('discount').value = '0';
+      document.getElementById('invoiceDate').value = new Date().toISOString().slice(0, 10);
+      document.getElementById('invoiceNo').value = await nextInvoiceNo();
+      document.getElementById('itemsBody').innerHTML = '';
+      addRow();
+      recalc();
+    };
+
+    
+async function saveToHistory(filename) {
+      // Build entry with numeric total for safe arithmetic & reporting
+      const rawTotal = document.getElementById('pGrand') ? document.getElementById('pGrand').textContent : (document.getElementById('grand') ? document.getElementById('grand').textContent : '0');
+      const numericTotal = parseFloat(String(rawTotal).replace(/[^\d.-]/g, '')) || 0;
+      const entry = {
+        name: filename,
+        invoiceNo: document.getElementById('invoiceNo').value,
+        date: document.getElementById('invoiceDate').value,
+        customer: document.getElementById('custName').value || '',
+        phone: document.getElementById('custPhone').value || '',
+        total: numericTotal,
+        totalText: String(rawTotal),
+        ts: serverTimestamp()
+      };
+      // Ensure we have the collection reference
+      if (!billsCol) {
+        console.error('billsCol missing; cannot save to history.');
+        alert('Unable to save bill: internal error (no collection).');
+        return;
+      }
+      try {
+        // attempt to add document
+        const docRef = await addDoc(billsCol, entry);
+        console.log('Saved bill to history:', docRef.id);
+      } catch (err) {
+        console.error('Failed to save bill to Firestore', err);
+        // Provide actionable message for permission errors
+        if (err && err.code) {
+          alert('Failed to save bill: ' + (err.message || err.code) + '. Check Firestore rules and permissions.');
+        } else {
+          alert('Failed to save bill. See console for details.');
+        }
+      }
+    }
+
+
+    
+function renderHistory() {
+      const list = document.getElementById('historyList');
+      list.innerHTML = '';
+      if (!billsCache.length) {
+        list.innerHTML = `<div class="muted">No bills yet.</div>`;
+        return;
+      }
+      billsCache.forEach(b => {
+        const div = document.createElement('div');
+        div.className = 'history-item';
+        const ts = b.ts?.toDate ? b.ts.toDate() : (b.ts || new Date());
+        div.innerHTML = `
+      <div>
+        <div style="font-weight:700">${b.invoiceNo || '—'} • ${b.customer || '—'}</div>
+        <div class="muted" style="font-size:12px">${new Date(ts).toLocaleString()} • ${b.totalText || b.total || ""}</div>
+      </div>
+      <div class="right">
+        <button class="btn danger" data-act="del">Delete</button>
+      </div>
+    `;
+        list.appendChild(div);
+        const btnDel = div.querySelector('button[data-act="del"]');
+        btnDel.onclick = async () => {
+          if (!confirm('Delete this bill? This action cannot be undone.')) return;
+          try {
+            const dref = doc(db, 'users', auth.currentUser.uid, 'bills', b.id);
+            await deleteDoc(dref);
+            console.log('Deleted bill', b.id);
+          } catch (err) {
+            console.error('Delete failed', err);
+            alert('Failed to delete bill: ' + (err.message || err.code || 'Unknown error'));
+          }
+        };
+      });
+    }
+
+
+    
+function calcDashboard() {
+      const today = new Date();
+      const t0 = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+      const t1 = t0 + 86400000;
+      const todayBills = billsCache.filter(b => {
+        const ms = b.ts?.toDate ? b.ts.toDate().getTime() : (b.ts || 0);
+        return ms >= t0 && ms < t1;
+      });
+      document.getElementById('statToday').textContent = todayBills.length;
+      const monthStart = new Date(today.getFullYear(), today.getMonth(), 1).getTime();
+      let sum = 0;
+      billsCache.filter(b => {
+        const ms = b.ts?.toDate ? b.ts.toDate().getTime() : (b.ts || 0);
+        return ms >= monthStart;
+      }).forEach(b => {
+        const n = Number(b.total) || parseFloat(String(b.total || '0').replace(/[^\d.]/g, '')) || 0;
+        sum += n;
+      });
+      document.getElementById('statMonth').textContent = `${cachedSettings?.currency || '₹'}${sum.toFixed(2)}`;
+
+      // total revenue (all time)
+      let totalRevenue = 0;
+      billsCache.forEach(b => { totalRevenue += Number(b.total) || parseFloat(String(b.total || '0').replace(/[^\d.]/g, '')) || 0; });
+      const revEl = document.getElementById('totalRevenue');
+      if (revEl) revEl.textContent = `${cachedSettings?.currency || '₹'}${totalRevenue.toFixed(2)}`;
+    }
+
+
+    // Keyboard helpers
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); document.getElementById('saveBtn').click(); }
+    });
+
+  </script>
+</body>
+
+</html>
